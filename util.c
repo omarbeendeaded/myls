@@ -39,6 +39,7 @@ Entry makeEntry (char* path, DIR* dp)
 	entry.nlink = st.st_nlink; // Get number of hard links
 	entry.size  = st.st_size;  // Get size of file in bytes
 
+	entry.mode = st.st_mode;
 	getPermissions(st.st_mode, entry.perms); // Create permissions string
 	
 	// Times
@@ -165,6 +166,33 @@ void printLongList (Entry entry, int dispTime)
 	printf("%s ", buf);
 
 }
+
+
+void printColor (Entry entry, int maxLen, char* str)
+{
+	char* color;
+	
+	if      (S_ISDIR(entry.mode)) color = BLUE;  // Directory
+	else if (S_ISLNK(entry.mode)) color = CYAN;  // Symbolic link
+	else if (S_ISREG(entry.mode)) 
+	{
+		if (entry.mode & S_IXUSR) {
+		    color = GREEN;  // Executable file
+		} 
+		else 
+		{
+		    color = RESET;  // Regular file
+		}
+	}
+	else if (S_ISCHR(entry.mode) || S_ISBLK(entry.mode))   color = MAGENTA;  // Special device file (char/block)
+	else if (S_ISFIFO(entry.mode) || S_ISSOCK(entry.mode)) color = YELLOW;  // Pipe or socket
+	else color = RESET;  // Other file types, no color
+	
+	printf("%s%-*s%s  ", color, maxLen, str, RESET);
+
+}
+
+
 
 
 

@@ -161,8 +161,8 @@ void do_ls(char* dir)
 		// -l
 		if (longList) printLongList(entries[i], dispTime);
 
-		if (!pDir) printf("%-*s  ", maxLen, entries[i].name);
-		else       printf("%-*s  ", maxLen, dir);
+		if (!pDir) printColor (entries[i], maxLen, entries[i].name);
+		else       printColor (entries[i], maxLen, dir);
 
 		if (oneOpt || longList || i % (w.ws_col / (maxLen + (7 * inode) + 2)) == 0) printf("\n");
 	}
